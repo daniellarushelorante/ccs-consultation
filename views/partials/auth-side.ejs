@@ -1,0 +1,15 @@
+<aside class="auth-side">
+  <div class="brand"><span class="brand-mark">CC</span> CCS Consultation</div>
+  <div>
+    <h1>Book a consultation without chasing anyone down.</h1>
+    <p>See when your professors are free, pick a slot, and get a reply in the same place.</p>
+    <div class="week-grid" aria-hidden="true">
+      <% ['Mon','Tue','Wed','Thu','Fri'].forEach(function (d, i) { %>
+        <div><span><%= d %></span>
+          <% for (var r = 0; r < 4; r++) { %><i class="<%= ((i * 3 + r * 2) % 5 < 2) ? 'on' : '' %>" style="margin-bottom:6px"></i><% } %>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  <p>College of Computing Studies</p>
+</aside>

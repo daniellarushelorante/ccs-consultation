@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | CCS Consultation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<% if (user) { %>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="<%= user.role === 'admin' ? '/admin/dashboard' : (user.role === 'faculty' ? '/faculty/dashboard' : '/student/home') %>"><span class="brand-mark">CC</span> CCS Consultation</a>
+      <nav class="nav" aria-label="Main">
+        <% nav.forEach(function (n) { %>
+          <a href="<%= n.href %>" <%- active === n.key ? 'aria-current="page"' : '' %>><%= n.label %></a>
+        <% }) %>
+      </nav>
+      <div class="who">
+        <span><%= user.name %></span>
+        <form method="post" action="/logout"><button class="link-btn" type="submit">Log out</button></form>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <% if (flash) { %><div class="flash <%= flash.type %>" role="status"><%= flash.text %></div><% } %>
+<% } %>

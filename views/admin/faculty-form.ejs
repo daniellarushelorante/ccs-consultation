@@ -1,0 +1,69 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1><%= mode === 'new' ? 'Add professor' : 'Edit professor' %></h1>
+    <p><%= mode === 'new' ? 'They can log in with the User ID and password you set here.' : 'Leave the password empty to keep the current one.' %></p>
+  </div>
+  <a class="btn ghost" href="/admin/faculty">Back to professors</a>
+</div>
+
+<% if (errors.length) { %>
+  <ul class="errors" role="alert"><% errors.forEach(function (e) { %><li><%= e %></li><% }) %></ul>
+<% } %>
+
+<form class="panel form-narrow" method="post" action="<%= mode === 'new' ? '/admin/faculty' : '/admin/faculty/' + values.id %>" novalidate>
+  <div class="field">
+    <label for="full_name">Full name</label>
+    <input id="full_name" name="full_name" value="<%= values.full_name || '' %>" required maxlength="100">
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="user_id">User ID</label>
+      <input id="user_id" name="user_id" value="<%= values.user_id || '' %>" required maxlength="20" placeholder="FAC-004">
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" value="<%= values.email || '' %>" required maxlength="120">
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="subject">Subject</label>
+      <input id="subject" name="subject" value="<%= values.subject || '' %>" required maxlength="80" placeholder="Web Development">
+    </div>
+    <div class="field">
+      <label for="room">Room</label>
+      <input id="room" name="room" value="<%= values.room || '' %>" required maxlength="40" placeholder="Room CCS - 204">
+    </div>
+  </div>
+  <div class="field">
+    <label for="password"><%= mode === 'new' ? 'Password' : 'New password (optional)' %></label>
+    <input id="password" name="password" type="password" maxlength="72" autocomplete="new-password" <%= mode === 'new' ? 'required' : '' %>>
+    <div class="hint">At least 8 characters, with a letter and a number.</div>
+  </div>
+
+  <% if (mode === 'new') { %>
+  <fieldset class="hours">
+    <legend>Consultation hours</legend>
+    <p class="hint">Creates 30-minute slots. The professor can change them later under My availability.</p>
+    <div class="chips">
+      <% weekdays.forEach(function (day) { %>
+        <label class="check"><input type="checkbox" name="days" value="<%= day %>" <%= (values.days || []).indexOf(day) !== -1 ? 'checked' : '' %>> <%= day %></label>
+      <% }) %>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="from">From</label>
+        <select id="from" name="from"><% timeOptions.forEach(function (t) { %><option value="<%= t.value %>" <%= values.from === t.value ? 'selected' : '' %>><%= t.label %></option><% }) %></select>
+      </div>
+      <div class="field">
+        <label for="to">Until</label>
+        <select id="to" name="to"><% timeOptions.forEach(function (t) { %><option value="<%= t.value %>" <%= values.to === t.value ? 'selected' : '' %>><%= t.label %></option><% }) %></select>
+      </div>
+    </div>
+  </fieldset>
+  <% } %>
+
+  <button class="btn" type="submit"><%= mode === 'new' ? 'Add professor' : 'Save changes' %></button>
+</form>
+<%- include('../partials/footer') %>

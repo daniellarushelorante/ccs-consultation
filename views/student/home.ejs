@@ -1,0 +1,10 @@
+<%- include('../partials/header') %>
+<% notices.forEach(function (n) { %><div class="flash info" role="status"><%= n %></div><% }) %>
+<div class="page-head">
+  <div>
+    <h1>Available professors</h1>
+    <p>Choose a professor, open their schedule, then pick a day and time.</p>
+  </div>
+</div>
+<%- include('../partials/faculty-list') %>
+<%- include('../partials/footer') %>

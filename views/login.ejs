@@ -1,0 +1,47 @@
+<%- include('partials/header') %>
+<div class="auth">
+  <%- include('partials/auth-side') %>
+  <section class="auth-main">
+    <div class="auth-card">
+      <% if (flash) { %><div class="flash <%= flash.type %>" role="status"><%= flash.text %></div><% } %>
+      <h2><%= role === 'admin' ? 'Administrator login' : 'Log in' %></h2>
+      <p><%= role === 'admin' ? 'For college staff who manage faculty and records.' : 'First, tell us who you are.' %></p>
+
+      <% if (role !== 'admin') { %>
+      <div class="role-switch" role="group" aria-label="Choose your role">
+        <button type="button" class="role-btn" data-role="student" aria-pressed="<%= role === 'student' %>"><strong>Student</strong><span>Book a consultation</span></button>
+        <button type="button" class="role-btn" data-role="faculty" aria-pressed="<%= role === 'faculty' %>"><strong>Faculty</strong><span>Manage requests</span></button>
+      </div>
+      <% } %>
+
+      <% if (error) { %><ul class="errors"><li><%= error %></li></ul><% } %>
+
+      <form method="post" action="/login" novalidate id="login-form">
+        <input type="hidden" name="role" id="role-input" value="<%= role %>">
+        <div class="field">
+          <label for="identifier" id="identifier-label"><%= role === 'student' ? 'Student ID or email' : 'User ID' %></label>
+          <input id="identifier" name="identifier" value="<%= identifier %>" autocomplete="username" required maxlength="120"
+                 placeholder="<%= role === 'admin' ? 'ADMIN' : (role === 'faculty' ? 'FAC-001' : '2026-0001') %>">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="72">
+        </div>
+        <button class="btn block" type="submit">Log in</button>
+      </form>
+
+      <% if (role === 'admin') { %>
+        <p class="auth-alt"><a href="/login">Back to student and faculty login</a></p>
+      <% } else { %>
+        <p class="auth-alt" id="register-link"<%- role === 'faculty' ? ' hidden' : '' %>>No account yet? <a href="/register">Create an account</a></p>
+        <p class="auth-alt" id="faculty-note"<%- role === 'student' ? ' hidden' : '' %>>Faculty accounts are created by the college administrator.</p>
+        <p class="auth-alt"><a href="/login?role=admin">Administrator login</a></p>
+      <% } %>
+
+      <div class="demo-note">
+        Demo logins: student <b>2026-0001</b> / <b>student123</b>, faculty <b>FAC-001</b> / <b>faculty123</b>, admin <b>ADMIN</b> / <b>admin123</b>.
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,45 @@
+<div class="faculty-list" id="faculty-list">
+  <% if (!facultyList.length) { %>
+    <div class="empty">No faculty match "<%= search %>". Try a name or a subject.</div>
+  <% } %>
+  <% facultyList.forEach(function (f) {
+       var initials = f.display.replace('Prof. ', '').split(' ').map(function (s) { return s[0]; }).join('').toUpperCase(); %>
+    <article class="fcard<%= f.onLeave ? ' leave' : '' %>" data-faculty="<%= f.id %>">
+      <div class="fcard-main">
+        <div class="avatar" aria-hidden="true"><%= initials %></div>
+        <div>
+          <h3><%= f.display %> <span class="badge <%= f.badge.cls %>"><%= f.badge.text %></span></h3>
+          <p class="fmeta"><%= f.subject %> &middot; <%= f.room %></p>
+          <p class="ftime"><%= f.timeText %></p>
+        </div>
+        <div class="fcard-action">
+          <% if (f.onLeave) { %>
+            <button class="btn ghost js-notify" type="button" data-faculty="<%= f.id %>">Notify me when back</button>
+          <% } else if (!f.days.length) { %>
+            <button class="btn" type="button" disabled>No open days</button>
+          <% } else { %>
+            <button class="btn js-view" type="button" aria-expanded="false" aria-controls="schedule-<%= f.id %>">View schedule</button>
+          <% } %>
+        </div>
+      </div>
+      <% if (!f.onLeave && f.days.length) { %>
+      <div class="schedule" id="schedule-<%= f.id %>" hidden>
+        <h4>Pick a day</h4>
+        <div class="chips">
+          <% f.days.forEach(function (d) { %><button type="button" class="chip js-day" data-day="<%= d %>" aria-pressed="false"><%= d %></button><% }) %>
+        </div>
+        <div class="js-slot-area" aria-live="polite"></div>
+      </div>
+      <% } %>
+    </article>
+  <% }) %>
+</div>
+
+<dialog id="confirmed">
+  <div class="dialog-body">
+    <div class="tick" aria-hidden="true">&#10003;</div>
+    <h2>BOOKING CONFIRMED</h2>
+    <p>Your request was sent to the professor. You'll see their answer under My appointments.</p>
+    <a class="btn mark block" href="/student/appointments">View my appointments</a>
+  </div>
+</dialog>

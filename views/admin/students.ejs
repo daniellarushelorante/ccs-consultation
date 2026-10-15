@@ -1,0 +1,43 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1>Students</h1>
+    <p><%= rows.length %> shown. Students create their own accounts on the login page.</p>
+  </div>
+</div>
+
+<form class="search toolbar" method="get" action="/admin/students" role="search">
+  <label class="sr-only" for="q">Search students</label>
+  <input id="q" name="q" value="<%= q %>" maxlength="50" placeholder="Name, student ID, email or program">
+  <button class="btn" type="submit">Search</button>
+  <% if (q) { %><a class="btn ghost" href="/admin/students">Clear</a><% } %>
+</form>
+
+<% if (!rows.length) { %>
+  <div class="empty"><%= q ? 'No student matches "' + q + '".' : 'No students have registered yet.' %></div>
+<% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Student</th><th>Student ID</th><th>Program</th><th>Year</th><th>Bookings</th><th>Registered</th><th></th></tr></thead>
+      <tbody>
+        <% rows.forEach(function (r) { %>
+          <tr>
+            <td><b><%= r.full_name %></b><br><span class="muted"><%= r.email %></span></td>
+            <td><%= r.student_id %></td>
+            <td><%= r.program %></td>
+            <td><%= r.year_level %></td>
+            <td><%= r.total %></td>
+            <td><%= r.created_at.slice(0, 10) %></td>
+            <td class="row-actions">
+              <form method="post" action="/admin/students/<%= r.id %>/delete"
+                    onsubmit="return confirm('Delete <%= r.full_name.replace(/'/g, "\\'") %>? This also removes their <%= r.total %> booking record(s) and cannot be undone.')">
+                <button class="btn danger small" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+<%- include('../partials/footer') %>

@@ -1,0 +1,53 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1>Records</h1>
+    <p>Every consultation booking in the system. Showing <%= shown %><%= shown === 500 ? ' (the latest 500; export for all)' : '' %>.</p>
+  </div>
+  <a class="btn ghost" href="/admin/appointments.csv<%= qs ? '?' + qs : '' %>">Export CSV</a>
+</div>
+
+<form class="filters" method="get" action="/admin/appointments">
+  <div class="field"><label for="q">Search</label><input id="q" name="q" value="<%= filters.q %>" maxlength="50" placeholder="Student, professor or topic"></div>
+  <div class="field"><label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="">All</option>
+      <% statuses.forEach(function (s) { %><option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= cap(s) %></option><% }) %>
+    </select>
+  </div>
+  <div class="field"><label for="from">From</label><input id="from" name="from" type="date" value="<%= filters.from %>"></div>
+  <div class="field"><label for="to">To</label><input id="to" name="to" type="date" value="<%= filters.to %>"></div>
+  <button class="btn" type="submit">Filter</button>
+  <a class="btn ghost" href="/admin/appointments">Reset</a>
+</form>
+
+<% if (!rows.length) { %>
+  <div class="empty">No records match these filters.</div>
+<% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Time</th><th>Student</th><th>Professor</th><th>Topic</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <% rows.forEach(function (r) { %>
+          <tr>
+            <td><%= fmt.withDay(r.appt_date) %>, <%= r.appt_date.slice(0, 4) %></td>
+            <td><%= fmt.time(r.slot_time) %></td>
+            <td><%= r.student %><br><span class="muted"><%= r.student_id %></span></td>
+            <td><%= fmt.display(r.faculty) %><br><span class="muted"><%= r.subject %></span></td>
+            <td><%= r.topic %></td>
+            <td><span class="pill <%= r.status %>"><%= cap(r.status) %></span></td>
+            <td class="row-actions">
+              <% if (r.status === 'pending' || r.status === 'approved') { %>
+                <form method="post" action="/admin/appointments/<%= r.id %>/cancel" onsubmit="return confirm('Cancel this appointment?')">
+                  <input type="hidden" name="back" value="/admin/appointments<%= qs ? '?' + qs : '' %>">
+                  <button class="btn danger small" type="submit">Cancel</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+<%- include('../partials/footer') %>

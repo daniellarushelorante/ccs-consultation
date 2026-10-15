@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+<div class="auth">
+  <%- include('partials/auth-side') %>
+  <section class="auth-main">
+    <div class="auth-card">
+      <h2>Create your student account</h2>
+      <p>It takes a minute. You'll use your Student ID to log in.</p>
+
+      <% if (errors.length) { %>
+        <ul class="errors" role="alert"><% errors.forEach(function (e) { %><li><%= e %></li><% }) %></ul>
+      <% } %>
+
+      <form method="post" action="/register" novalidate>
+        <div class="field">
+          <label for="full_name">Full name</label>
+          <input id="full_name" name="full_name" value="<%= values.full_name || '' %>" required maxlength="100" autocomplete="name">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="student_id">Student ID</label>
+            <input id="student_id" name="student_id" value="<%= values.student_id || '' %>" required maxlength="20" placeholder="2026-0001">
+          </div>
+          <div class="field">
+            <label for="year_level">Year level</label>
+            <select id="year_level" name="year_level" required>
+              <option value="">Choose</option>
+              <% [1,2,3,4,5].forEach(function (y) { %><option value="<%= y %>" <%= String(values.year_level) === String(y) ? 'selected' : '' %>>Year <%= y %></option><% }) %>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="program">Program</label>
+          <input id="program" name="program" value="<%= values.program || '' %>" required maxlength="60" placeholder="BSIT">
+        </div>
+        <div class="field">
+          <label for="email">School email</label>
+          <input id="email" name="email" type="email" value="<%= values.email || '' %>" required maxlength="120" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required minlength="8" maxlength="72" autocomplete="new-password">
+          <div class="hint">At least 8 characters, with a letter and a number.</div>
+        </div>
+        <button class="btn block" type="submit">Create an account</button>
+      </form>
+      <p class="auth-alt">Already registered? <a href="/login">Log in</a></p>
+    </div>
+  </section>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1>Admin dashboard</h1>
+    <p>Everything in the consultation system at a glance.</p>
+  </div>
+  <a class="btn" href="/admin/faculty/new">Add professor</a>
+</div>
+
+<section class="stats stats-5" aria-label="Summary">
+  <div class="stat"><b><%= stats.faculty %></b><span>Professors</span></div>
+  <div class="stat"><b><%= stats.students %></b><span>Students</span></div>
+  <div class="stat"><b><%= stats.appointments %></b><span>All bookings</span></div>
+  <div class="stat<%= stats.pending ? ' hot' : '' %>"><b><%= stats.pending %></b><span>Awaiting a reply</span></div>
+  <div class="stat"><b><%= stats.today %></b><span>Booked for today</span></div>
+</section>
+
+<div class="two-col">
+  <section class="section">
+    <h2>Bookings by status</h2>
+    <div class="panel bars">
+      <% byStatus.forEach(function (s) { %>
+        <div class="bar-row">
+          <span class="bar-label"><%= cap(s.status) %></span>
+          <span class="bar-track"><span class="bar-fill <%= s.status %>" style="width: <%= Math.round(s.count / maxStatus * 100) %>%"></span></span>
+          <b><%= s.count %></b>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Most consultations held</h2>
+    <div class="panel">
+      <% if (!busiest.length) { %><p class="muted">No professors yet.</p><% } else { %>
+        <ol class="rank">
+          <% busiest.forEach(function (b) { %>
+            <li><span><%= fmt.display(b.full_name) %></span><b><%= b.total %></b></li>
+          <% }) %>
+        </ol>
+      <% } %>
+    </div>
+  </section>
+</div>
+
+<section class="section">
+  <h2>Latest bookings <a class="more" href="/admin/appointments">See all records</a></h2>
+  <% if (!recent.length) { %>
+    <div class="empty">No bookings yet.</div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Time</th><th>Student</th><th>Professor</th><th>Topic</th><th>Status</th></tr></thead>
+        <tbody>
+          <% recent.forEach(function (r) { %>
+            <tr>
+              <td><%= fmt.withDay(r.appt_date) %></td>
+              <td><%= fmt.time(r.slot_time) %></td>
+              <td><%= r.student %></td>
+              <td><%= fmt.display(r.faculty) %></td>
+              <td><%= r.topic %></td>
+              <td><span class="pill <%= r.status %>"><%= cap(r.status) %></span></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<section class="section">
+  <h2>Admin activity</h2>
+  <% if (!activity.length) { %>
+    <div class="empty">Changes made by administrators will be listed here.</div>
+  <% } else { %>
+    <ul class="activity">
+      <% activity.forEach(function (a) { %>
+        <li><span><%= a.action %></span><small><%= a.admin_name %>, <%= a.created_at %></small></li>
+      <% }) %>
+    </ul>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

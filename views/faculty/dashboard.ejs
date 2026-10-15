@@ -1,0 +1,57 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1><%= greeting %>, <%= name %></h1>
+    <p><%= subtitle %></p>
+  </div>
+</div>
+
+<section class="stats" aria-label="Summary">
+  <div class="stat<%= stats.pending ? ' hot' : '' %>"><b><%= stats.pending %></b><span>Pending requests</span></div>
+  <div class="stat"><b><%= stats.today %></b><span>Today</span></div>
+  <div class="stat"><b><%= stats.week %></b><span>Later this week</span></div>
+  <div class="stat"><b><%= stats.completed %></b><span>Completed</span></div>
+</section>
+
+<section class="section">
+  <h2>Pending requests <span class="count"><%= stats.pending %></span></h2>
+  <% if (!pending.length) { %>
+    <div class="empty">No requests waiting. New bookings from students will show up here.</div>
+  <% } else { %>
+    <div class="slips">
+      <% pending.forEach(function (p) { var parts = fmt.short(p.appt_date).split(' '); %>
+        <article class="slip">
+          <div class="slip-date"><small><%= parts[0] %></small><b><%= parts[1] %></b></div>
+          <div class="slip-body">
+            <h3><%= p.full_name %></h3>
+            <p><%= p.program %>, Year <%= p.year_level %></p>
+            <p><span class="time"><%= fmt.withDay(p.appt_date) %>, <%= fmt.time(p.slot_time) %></span> &middot; <%= p.topic %></p>
+          </div>
+          <div class="slip-actions">
+            <form method="post" action="/faculty/requests/<%= p.id %>/approve"><button class="btn small" type="submit">Approve</button></form>
+            <form method="post" action="/faculty/requests/<%= p.id %>/decline"><button class="btn danger small" type="submit">Decline</button></form>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<section class="section">
+  <h2>Today's schedule</h2>
+  <% if (!schedule.length) { %>
+    <div class="empty">You have no slots today. Add some under My availability.</div>
+  <% } else { %>
+    <div class="timeline">
+      <% schedule.forEach(function (s) { %>
+        <div class="trow">
+          <div class="ttime"><%= s.time %></div>
+          <div class="tinfo <%= s.color %>">
+            <% if (s.student) { %><b><%= s.student %></b><span><%= s.topic %></span><% } else { %>Open<% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1>Find faculty</h1>
+    <p>Search by name or subject.</p>
+  </div>
+  <form class="search" method="get" action="/student/find" role="search">
+    <label class="sr-only" for="q">Search faculty</label>
+    <input id="q" name="q" value="<%= search %>" maxlength="50" placeholder="Name or subject">
+    <button class="btn" type="submit">Search</button>
+  </form>
+</div>
+<%- include('../partials/faculty-list') %>
+<%- include('../partials/footer') %>

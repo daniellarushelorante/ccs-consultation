@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1>My appointments</h1>
+    <p>Requests wait for the professor's approval.</p>
+  </div>
+  <a class="btn" href="/student/find">Book another</a>
+</div>
+
+<% if (!appointments.length) { %>
+  <div class="empty">You haven't booked anything yet. Open <a href="/student/home">Home</a> to pick a professor.</div>
+<% } else { %>
+  <div class="slips">
+    <% appointments.forEach(function (a) {
+         var parts = fmt.short(a.appt_date).split(' ');
+         var off = ['declined','cancelled','expired','completed'].indexOf(a.status) !== -1; %>
+      <article class="slip<%= off ? ' is-off' : '' %>">
+        <div class="slip-date"><small><%= parts[0] %></small><b><%= parts[1] %></b></div>
+        <div class="slip-body">
+          <h3><%= fmt.display(a.faculty_name) %> <span class="pill <%= a.status %>"><%= a.status.charAt(0).toUpperCase() + a.status.slice(1) %></span></h3>
+          <p><span class="time"><%= fmt.time(a.slot_time) %></span> &middot; <%= a.room %></p>
+          <p>Topic: <%= a.topic %></p>
+        </div>
+        <div class="slip-actions">
+          <% if (a.status === 'pending' || a.status === 'approved') { %>
+            <form method="post" action="/student/appointments/<%= a.id %>/cancel" onsubmit="return confirm('Cancel this appointment?')">
+              <button class="btn danger small" type="submit">Cancel</button>
+            </form>
+          <% } %>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+<% } %>
+<%- include('../partials/footer') %>

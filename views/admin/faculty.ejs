@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <div>
+    <h1>Professors</h1>
+    <p><%= rows.length %> shown. Faculty accounts are created here only.</p>
+  </div>
+  <a class="btn" href="/admin/faculty/new">Add professor</a>
+</div>
+
+<form class="search toolbar" method="get" action="/admin/faculty" role="search">
+  <label class="sr-only" for="q">Search professors</label>
+  <input id="q" name="q" value="<%= q %>" maxlength="50" placeholder="Name, user ID, subject or email">
+  <button class="btn" type="submit">Search</button>
+  <% if (q) { %><a class="btn ghost" href="/admin/faculty">Clear</a><% } %>
+</form>
+
+<% if (!rows.length) { %>
+  <div class="empty"><%= q ? 'No professor matches "' + q + '".' : 'No professors yet. Add the first one.' %></div>
+<% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Professor</th><th>User ID</th><th>Subject</th><th>Room</th><th>Slots</th><th>Bookings</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <% rows.forEach(function (r) { var leave = r.on_leave_until && r.on_leave_until > today; %>
+          <tr>
+            <td><b><%= r.full_name %></b><br><span class="muted"><%= r.email %></span></td>
+            <td><%= r.user_id %></td>
+            <td><%= r.subject %></td>
+            <td><%= r.room %></td>
+            <td><%= r.slots %></td>
+            <td><%= r.total %><% if (r.pending) { %> <span class="pill pending"><%= r.pending %> pending</span><% } %></td>
+            <td><% if (leave) { %><span class="pill declined">On leave until <%= fmt.short(r.on_leave_until) %></span><% } else { %><span class="pill approved">Active</span><% } %></td>
+            <td class="row-actions">
+              <a class="btn ghost small" href="/admin/faculty/<%= r.id %>/edit">Edit</a>
+              <form method="post" action="/admin/faculty/<%= r.id %>/delete"
+                    onsubmit="return confirm('Delete <%= r.full_name.replace(/'/g, "\\'") %>? This also removes their <%= r.total %> booking record(s) and cannot be undone.')">
+                <button class="btn danger small" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+<%- include('../partials/footer') %>
