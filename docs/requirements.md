@@ -6,7 +6,7 @@
 - **Faculty**: sets availability and leave, approves or declines requests, views daily schedule.
 
 ## 2. Stakeholders
-Students, faculty, the College of Computing Studies dean and department heads, the registrar/IT office who maintain the system, and the project team.
+Students, faculty, the College of Computer Studies dean and department heads, the admin who maintain the system, and the project team.
 
 ## 3. Functional Requirements
 1. Users choose a role (student or faculty) on the login page and log in with ID/email and password.
@@ -20,10 +20,8 @@ Students, faculty, the College of Computing Studies dean and department heads, t
 9. Faculty see pending, today, later-this-week and completed counts, and can approve or decline each request.
 10. Faculty see today's schedule with student names and topics.
 11. Faculty can add or remove slots and set a return date when on leave; students can ask to be notified.
-12. Administrators can add, edit (including password reset) and delete professors, and set initial consultation hours.
+12. Administrators can add, edit and delete professors, and set initial consultation hours.
 13. Administrators can view and delete students, and view all bookings with search, status and date filters.
-14. Administrators can cancel bookings and export the filtered records to CSV.
-15. Administrator actions are written to an activity log shown on the admin dashboard.
 
 ## 4. Non-Functional Requirements
 - **Security**: bcrypt-hashed passwords, parameterized queries, httpOnly session cookie, role-based access.
